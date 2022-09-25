@@ -7,6 +7,9 @@ import jsTPS from "./common/jsTPS.js";
 
 // OUR TRANSACTIONS
 import MoveSong_Transaction from "./transactions/MoveSong_Transaction.js";
+import RemoveSong_Transaction from "./transactions/RemoveSong_Transaction.js";
+import EditSong_Transaction from "./transactions/EditSong_Transaction.js";
+import AddSong_Transaction from "./transactions/AddSong_Transaction.js";
 
 // THESE REACT COMPONENTS ARE MODALS
 import DeleteListModal from "./components/DeleteListModal.js";
@@ -154,7 +157,7 @@ class App extends React.Component {
 
   editCurrentSong = (newSong) => {
     if (this.state.currentSong != null) {
-      this.editSong(this.state.currentSong, newSong);
+      this.addEditSongTransaction(this.state.currentSong, newSong);
       this.hideEditSongModal();
     }
   };
@@ -171,7 +174,7 @@ class App extends React.Component {
 
   removeCurrentSong = () => {
     if (this.state.currentSong != null) {
-      this.removeSong(this.state.currentSong);
+      this.addRemoveSongTransaction(this.state.currentSong);
       this.hideRemoveSongModal();
     }
   };
@@ -183,8 +186,8 @@ class App extends React.Component {
     this.setStateWithUpdatedList(newList);
   };
 
-  addNewSong = () => {
-    this.addSong(null, defaultSong);
+  addNewSong = (song) => {
+    this.addSong(null, song);
   };
 
   addSong = (index, song) => {
@@ -324,6 +327,28 @@ class App extends React.Component {
     let transaction = new MoveSong_Transaction(this, start, end);
     this.tps.addTransaction(transaction);
   };
+  addRemoveSongTransaction = () => {
+    let transaction = new RemoveSong_Transaction(
+      this,
+      this.state.currentSong,
+      this.state.currentList.songs[this.state.currentSong]
+    );
+    this.tps.addTransaction(transaction);
+  };
+  addEditSongTransaction = (index, newSong) => {
+    let transaction = new EditSong_Transaction(
+      this,
+      index,
+      this.state.currentList.songs[index],
+      newSong
+    );
+    this.tps.addTransaction(transaction);
+  };
+  addAddSongTransaction = (song) => {
+    let transaction = new AddSong_Transaction(this, song);
+    this.tps.addTransaction(transaction);
+  };
+
   // THIS FUNCTION BEGINS THE PROCESS OF PERFORMING AN UNDO
   undo = () => {
     if (this.tps.hasTransactionToUndo()) {
@@ -417,8 +442,23 @@ class App extends React.Component {
     let canRedo = this.tps.hasTransactionToRedo();
     let canClose = this.state.currentList !== null;
 
+    const handleKeyDown = (event) => {
+      if (event.ctrlKey) {
+        if (event.keyCode === 90) {
+          if (this.tps.hasTransactionToUndo()) {
+            this.undo();
+          }
+          event.preventDefault();
+        } else if (event.keyCode === 89) {
+          if (this.tps.hasTransactionToRedo()) {
+            this.redo();
+          }
+        }
+      }
+    };
+
     return (
-      <div id="root">
+      <div id="root" onKeyDown={handleKeyDown}>
         <Banner />
         <SidebarHeading createNewListCallback={this.createNewList} />
         <SidebarList
@@ -433,7 +473,7 @@ class App extends React.Component {
           canUndo={canUndo}
           canRedo={canRedo}
           canClose={canClose}
-          addSongCallback={this.addNewSong}
+          addSongCallback={() => this.addAddSongTransaction(defaultSong)}
           undoCallback={this.undo}
           redoCallback={this.redo}
           closeCallback={this.closeCurrentList}

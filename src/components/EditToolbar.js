@@ -20,6 +20,7 @@ export default class EditToolbar extends React.Component {
     if (canUndo) undoClass += " disabled";
     if (canRedo) redoClass += " disabled";
     if (canClose) closeClass += " disabled";
+
     return (
       <div id="edit-toolbar">
         <input
