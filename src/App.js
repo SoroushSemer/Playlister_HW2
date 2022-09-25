@@ -20,6 +20,11 @@ import PlaylistCards from "./components/PlaylistCards.js";
 import SidebarHeading from "./components/SidebarHeading.js";
 import SidebarList from "./components/SidebarList.js";
 import Statusbar from "./components/Statusbar.js";
+const defaultSong = {
+  title: "Untitled",
+  artist: "Unknown",
+  youTubeId: "dQw4w9WgXcQ",
+};
 
 class App extends React.Component {
   constructor(props) {
@@ -160,10 +165,8 @@ class App extends React.Component {
     newCurrentList.songs[index] = newSong;
 
     // AND FROM OUR APP STATE
-    this.setState((prevState) => ({
-      ...prevState,
-      currentList: newCurrentList,
-    }));
+
+    this.setStateWithUpdatedList(newCurrentList);
   };
 
   removeCurrentSong = () => {
@@ -174,13 +177,25 @@ class App extends React.Component {
   };
 
   removeSong = (index) => {
-    this.setState((prevState) => ({
-      ...prevState,
-      currentList: {
-        ...prevState.currentList,
-        songs: prevState.currentList.songs.filter((val, i) => i != index),
-      },
-    }));
+    let newList = this.state.currentList;
+    newList.songs = newList.songs.filter((_, i) => i !== index);
+
+    this.setStateWithUpdatedList(newList);
+  };
+
+  addNewSong = () => {
+    this.addSong(null, defaultSong);
+  };
+
+  addSong = (index, song) => {
+    let newList = this.state.currentList;
+    if (index == null) {
+      newList.songs.push(song);
+    } else {
+      newList.songs.splice(index, 0, song);
+    }
+
+    this.setStateWithUpdatedList(newList);
   };
 
   renameList = (key, newName) => {
@@ -402,12 +417,6 @@ class App extends React.Component {
     let canRedo = this.tps.hasTransactionToRedo();
     let canClose = this.state.currentList !== null;
 
-    const defaultSong = {
-      title: "Untitled",
-      artist: "Unknown",
-      youTubeId: "dQw4w9WgXcQ",
-    };
-
     return (
       <div id="root">
         <Banner />
@@ -424,6 +433,7 @@ class App extends React.Component {
           canUndo={canUndo}
           canRedo={canRedo}
           canClose={canClose}
+          addSongCallback={this.addNewSong}
           undoCallback={this.undo}
           redoCallback={this.redo}
           closeCallback={this.closeCurrentList}
