@@ -3,8 +3,12 @@ import React, { Component } from "react";
 export default class EditSongModal extends Component {
   constructor(props) {
     super(props);
-
-    this.state = { song: props.song, initialSong: props.song };
+    const defaultSong = {
+      title: "Untitled",
+      artist: "Unknown",
+      youTubeId: "dQw4w9WgXcQ",
+    };
+    this.state = { song: defaultSong, initialSong: defaultSong };
   }
 
   handleChange = (event) => {
@@ -19,7 +23,7 @@ export default class EditSongModal extends Component {
   render() {
     const { editSongCallback, hideEditSongModalCallback } = this.props;
 
-    if (this.props.song !== this.state.initialSong) {
+    if (this.props.song != null && this.props.song !== this.state.initialSong) {
       this.setState({ song: this.props.song, initialSong: this.props.song });
     }
 

@@ -64,7 +64,7 @@ export default class SongCard extends React.Component {
   };
 
   render() {
-    const { song, editCallback } = this.props;
+    const { song, editCallback, removeCallback } = this.props;
     let num = this.getItemNum();
     // console.log("num: " + num);
     let itemClass = "playlister-song list-card unselected-list-card";
@@ -95,6 +95,7 @@ export default class SongCard extends React.Component {
           id={"delete-song-" + num}
           className="list-card-button"
           value={"X"}
+          onClick={() => removeCallback(num - 1)}
         />
       </div>
     );
