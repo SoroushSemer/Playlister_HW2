@@ -64,9 +64,9 @@ export default class SongCard extends React.Component {
   };
 
   render() {
-    const { song } = this.props;
+    const { song, editCallback } = this.props;
     let num = this.getItemNum();
-    console.log("num: " + num);
+    // console.log("num: " + num);
     let itemClass = "playlister-song list-card unselected-list-card";
     if (this.state.draggedTo) {
       itemClass =
@@ -83,6 +83,7 @@ export default class SongCard extends React.Component {
         onDragLeave={this.handleDragLeave}
         onDrop={this.handleDrop}
         draggable="true"
+        onDoubleClick={() => editCallback(num - 1)}
       >
         {num + ". "}
         <a href={"https://www.youtube.com/watch?v=" + song.youTubeId}>
