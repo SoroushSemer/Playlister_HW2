@@ -137,22 +137,26 @@ body {
   font-size: 32pt;
 }
 
-.playlister-button,
-.playlister-button-disabled {
-  font-size: 36pt;
-  border-width: 0px;
+.toolbar-button,
+.toolbar-button-disabled {
   float: left;
   color: black;
   cursor: pointer;
+  font-size: 36pt;
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+  box-shadow: 2px 4px #888888;
 }
 
-.playlister-button:hover {
+.toolbar-button:hover {
   cursor: pointer;
   color: black;
 }
 
-.playlister-button-disabled {
+.toolbar-button-disabled {
   opacity: 0.25;
+  background-color: lightgray;
   cursor: not-allowed;
 }
 

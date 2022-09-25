@@ -436,11 +436,19 @@ class App extends React.Component {
     modal.classList.remove("is-visible");
   }
 
+  canUndo = () => {
+    return this.state.currentList && this.tps.hasTransactionToUndo();
+  };
+
+  canRedo = () => {
+    return this.state.currentList && this.tps.hasTransactionToRedo();
+  };
+
   render() {
-    let canAddSong = this.state.currentList !== null;
-    let canUndo = this.tps.hasTransactionToUndo();
-    let canRedo = this.tps.hasTransactionToRedo();
-    let canClose = this.state.currentList !== null;
+    const canAddSong = () => this.state.currentList !== null;
+    // const canUndo = ;
+    // const canRedo = this.tps.hasTransactionToRedo;
+    const canClose = () => this.state.currentList !== null;
 
     const handleKeyDown = (event) => {
       if (event.ctrlKey) {
@@ -460,7 +468,10 @@ class App extends React.Component {
     return (
       <div id="root" onKeyDown={handleKeyDown}>
         <Banner />
-        <SidebarHeading createNewListCallback={this.createNewList} />
+        <SidebarHeading
+          createNewListCallback={this.createNewList}
+          canCreateNewList={this.state.currentList != null ? false : true}
+        />
         <SidebarList
           currentList={this.state.currentList}
           keyNamePairs={this.state.sessionData.keyNamePairs}
@@ -470,8 +481,8 @@ class App extends React.Component {
         />
         <EditToolbar
           canAddSong={canAddSong}
-          canUndo={canUndo}
-          canRedo={canRedo}
+          canUndo={this.canUndo}
+          canRedo={this.canRedo}
           canClose={canClose}
           addSongCallback={() => this.addAddSongTransaction(defaultSong)}
           undoCallback={this.undo}
