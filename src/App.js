@@ -240,6 +240,7 @@ class App extends React.Component {
   // THIS FUNCTION BEGINS THE PROCESS OF LOADING A LIST FOR EDITING
   loadList = (key) => {
     let newCurrentList = this.db.queryGetList(key);
+    this.tps.clearAllTransactions();
     this.setState(
       (prevState) => ({
         listKeyPairMarkedForDeletion: prevState.listKeyPairMarkedForDeletion,

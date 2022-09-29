@@ -37,7 +37,7 @@ export default class EditToolbar extends React.Component {
           value="⟲"
           className={undoClass}
           onClick={undoCallback}
-          disabled={!canUndo}
+          disabled={!canUndo()}
         />
         <input
           type="button"
