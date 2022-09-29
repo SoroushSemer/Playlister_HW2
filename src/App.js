@@ -504,7 +504,7 @@ class App extends React.Component {
         />
         <EditSongModal
           song={
-            this.state.currentSong == null
+            this.state.currentSong == null || this.state.currentList == null
               ? defaultSong
               : this.state.currentList.songs[this.state.currentSong]
           }
@@ -514,7 +514,7 @@ class App extends React.Component {
 
         <RemoveSongModal
           song={
-            this.state.currentSong == null
+            this.state.currentSong == null || this.state.currentList == null
               ? defaultSong
               : this.state.currentList.songs[this.state.currentSong]
           }
